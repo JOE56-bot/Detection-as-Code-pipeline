@@ -1,485 +1,441 @@
-# Detection-as-Code Pipeline
+# 🔐 Detection-as-Code Pipeline
 
-![GitHub Actions](https://img.shields.io/github/actions/workflow/status/YOUR-USERNAME/YOUR-REPOSITORY/validate.yml?label=CI%20Validation\&logo=github)
-![Sigma](https://img.shields.io/badge/Sigma-Detection%20Rules-blue)
-![KQL](https://img.shields.io/badge/KQL-Threat%20Hunting-purple)
-![MITRE ATT%26CK](https://img.shields.io/badge/MITRE%20ATT%26CK-Mapped-red)
-![YAML](https://img.shields.io/badge/Rules-YAML-orange)
-![Python](https://img.shields.io/badge/Python-3.x-yellow?logo=python)
-![License](https://img.shields.io/badge/License-MIT-green)
+### Automated Security Detection Development, Validation & Testing
 
-## Overview
-
-This project implements a **Detection-as-Code (DaC) pipeline** for developing, validating, testing, and maintaining cybersecurity detection rules using version-controlled detection content.
-
-The project is designed to demonstrate practical **detection engineering**, including:
-
-* Sigma rule development
-* KQL threat detection and hunting
-* MITRE ATT&CK mapping
-* Detection rule validation
-* Automated CI/CD validation
-* Detection testing
-* Git-based change management
-* Security-focused documentation
-
-The project builds upon telemetry and detection engineering experience developed in a previous Windows endpoint telemetry research lab.
+![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)
+![Detection Engineering](https://img.shields.io/badge/Detection-Engineering-critical)
+![Sigma](https://img.shields.io/badge/Sigma-Rules-orange)
+![KQL](https://img.shields.io/badge/KQL-Microsoft%20Security-blue)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red)
+![PowerShell](https://img.shields.io/badge/PowerShell-Detection%20Telemetry-5391FE?logo=powershell&logoColor=white)
+![YAML](https://img.shields.io/badge/YAML-Configuration-lightgrey)
 
 ---
 
-## Project Goals
+## 📖 Project Overview
 
-The primary objectives are to build a repeatable and maintainable detection engineering workflow.
+The **Detection-as-Code Pipeline** is a cybersecurity engineering project focused on developing, version-controlling, validating, testing, and documenting security detections as code.
 
-### Detection Engineering
+The project applies software engineering principles to detection engineering by treating detection rules as maintainable code rather than manually managed SIEM configurations.
 
-* Develop detections from security telemetry
-* Write reusable Sigma rules
-* Translate detections into KQL
-* Map detections to MITRE ATT&CK techniques
-* Document detection logic and assumptions
+The pipeline is designed around:
 
-### Automation
+- **Sigma** detection rules
+- **Kusto Query Language (KQL)**
+- **Git & GitHub**
+- **GitHub Actions**
+- **Automated validation**
+- **Detection testing**
+- **MITRE ATT&CK mapping**
+- **Version-controlled detection development**
 
-* Automatically validate detection rules
-* Detect malformed YAML and invalid Sigma syntax
-* Run validation whenever detection content changes
-* Use GitHub Actions as the CI layer
-
-### Testing
-
-* Create repeatable detection test cases
-* Use controlled security simulations
-* Compare expected telemetry against detection logic
-* Document detection results and limitations
-
-### Portfolio Development
-
-This repository is intended to demonstrate practical skills relevant to:
-
-* SOC Analyst
-* Security Operations
-* Detection Engineering
-* Threat Detection
-* Threat Hunting
-* Blue Team
-* Security Engineering
+The project builds upon practical endpoint detection work from the **Windows Attack Telemetry Research Lab** and is designed to demonstrate a repeatable Detection Engineering workflow.
 
 ---
 
-# Architecture
+## 🎯 Objectives
+
+- Develop reusable Sigma detection rules.
+- Develop corresponding KQL detections.
+- Store detections in version control.
+- Automatically validate detection syntax.
+- Implement automated detection testing.
+- Use GitHub Actions for continuous validation.
+- Map detections to MITRE ATT&CK.
+- Document detection logic and expected behavior.
+- Track detection changes through Git history.
+- Establish a foundation for future automated deployment.
+
+---
+
+## 🏗️ Detection-as-Code Architecture
 
 ```text
-                    ┌──────────────────────┐
-                    │   Detection Author   │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │      Git / GitHub    │
-                    │   Detection Changes  │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │   GitHub Actions     │
-                    │    CI Validation     │
-                    └──────────┬───────────┘
-                               │
-                 ┌─────────────┴─────────────┐
-                 ▼                           ▼
-        ┌─────────────────┐        ┌─────────────────┐
-        │  Sigma Rules    │        │   KQL Queries   │
-        │     YAML        │        │   Detection     │
-        └────────┬────────┘        └────────┬────────┘
-                 │                          │
-                 ▼                          ▼
-        ┌─────────────────┐        ┌─────────────────┐
-        │ Rule Validation │        │ Threat Hunting  │
-        └────────┬────────┘        └─────────────────┘
-                 │
-                 ▼
-        ┌─────────────────┐
-        │ Detection Tests │
-        └────────┬────────┘
-                 │
-                 ▼
-        ┌─────────────────┐
-        │ MITRE ATT&CK    │
-        │    Mapping      │
-        └─────────────────┘
+                    Security Telemetry
+                           │
+                           ▼
+                  Detection Development
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+        Sigma Detection             KQL Detection
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                    Git Repository
+                           │
+                           ▼
+                    GitHub Actions
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+       Syntax Validation          Detection Tests
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                   Validation Results
+                           │
+                           ▼
+                 MITRE ATT&CK Mapping
+                           │
+                           ▼
+                  Detection Repository
 ```
 
 ---
 
-# Repository Structure
+## 🔄 Detection Engineering Workflow
 
 ```text
-detection-as-code/
-│
-├── .github/
-│   └── workflows/
-│       └── validate.yml
+1. Identify Threat
+       ↓
+2. Develop Detection
+       ↓
+3. Write Sigma Rule
+       ↓
+4. Develop KQL Query
+       ↓
+5. Validate Syntax
+       ↓
+6. Test Detection
+       ↓
+7. Map to MITRE ATT&CK
+       ↓
+8. Commit to Git
+       ↓
+9. GitHub Actions Validation
+       ↓
+10. Review & Improve
+```
+
+---
+
+## 📂 Repository Structure
+
+```text
+Detection-as-Code-Pipeline/
 │
 ├── detections/
 │   ├── sigma/
-│   │   ├── windows/
-│   │   ├── powershell/
-│   │   └── process/
-│   │
 │   └── kql/
-│       ├── windows/
-│       ├── powershell/
-│       └── process/
 │
 ├── tests/
-│   ├── test_cases/
-│   └── expected_results/
-│
-├── docs/
-│   ├── architecture.md
-│   ├── detection-development.md
-│   ├── testing.md
-│   └── mitre-coverage.md
+│   ├── sigma/
+│   └── kql/
 │
 ├── scripts/
-│   └── validate_detections.py
 │
-├── .gitignore
+├── .github/
+│   └── workflows/
+│
+├── docs/
+│   ├── architecture/
+│   └── detection-development/
+│
+├── screenshots/
+│
+├── README.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
 ├── LICENSE
-└── README.md
+└── ROADMAP.md
 ```
 
 ---
 
-# Detection Workflow
+## 🧪 Detection Testing
 
-Each detection follows a controlled development lifecycle.
+The project will progressively introduce automated testing for detections.
+
+Testing will focus on:
+
+- Valid detection syntax
+- Required metadata
+- Detection logic
+- Expected positive matches
+- Expected negative matches
+- False-positive considerations
+- MITRE ATT&CK mappings
+
+Example testing concept:
 
 ```text
-Telemetry
-    │
-    ▼
-Detection Idea
-    │
-    ▼
+Detection Rule
+      │
+      ├── Malicious Test Case → SHOULD MATCH
+      │
+      └── Benign Test Case    → SHOULD NOT MATCH
+```
+
+---
+
+## 🧩 Sigma Detection Engineering
+
+Sigma rules provide a vendor-neutral format for representing security detections.
+
+Example detection workflow:
+
+```text
 Sigma Rule
     │
-    ▼
-Rule Validation
+    ├── Detection Logic
+    ├── Metadata
+    ├── Severity
+    ├── Tags
+    └── MITRE ATT&CK
+            │
+            ▼
+       Validation
+            │
+            ▼
+       Conversion
+            │
+            ▼
+        KQL / SIEM
+```
+
+---
+
+## 🔎 KQL Detection Library
+
+KQL detections will provide Microsoft-focused implementations of the detection logic.
+
+Planned detections include:
+
+| Detection | Technology | Status |
+|---|---|:---:|
+| Encoded PowerShell | Sigma + KQL | 🚧 |
+| Suspicious PowerShell | Sigma + KQL | ⬜ |
+| Account Discovery | Sigma + KQL | ⬜ |
+| System Information Discovery | Sigma + KQL | ⬜ |
+| Network Configuration Discovery | Sigma + KQL | ⬜ |
+
+---
+
+## ⚙️ GitHub Actions
+
+GitHub Actions will provide continuous validation whenever detection code is changed.
+
+Planned workflow:
+
+```text
+Developer
     │
     ▼
-MITRE ATT&CK Mapping
+Git Commit
     │
     ▼
-KQL Translation
-    │
-    ▼
-Detection Testing
-    │
-    ▼
-Git Commit / Pull Request
+Pull Request / Push
     │
     ▼
 GitHub Actions
     │
-    ▼
-Validated Detection
+    ├── Validate Sigma
+    │
+    ├── Validate Metadata
+    │
+    ├── Run Detection Tests
+    │
+    └── Generate Results
+             │
+             ▼
+        Pass / Fail
 ```
 
 ---
 
-# Detection Content
+## 🎯 MITRE ATT&CK Mapping
 
-## Sigma
+Each detection will be mapped to relevant MITRE ATT&CK techniques.
 
-Sigma is used as the primary vendor-neutral detection format.
+Initial coverage will build from techniques investigated in the Windows Attack Telemetry Research Lab.
 
-Example categories include:
-
-* Suspicious PowerShell execution
-* Process creation anomalies
-* File creation activity
-* Registry modifications
-* DNS activity
-* LOLBin execution
-* Persistence mechanisms
-
-Sigma rules allow detection logic to remain portable before being converted into platform-specific query languages.
+| Technique | Description | Detection Status |
+|---|---|:---:|
+| T1059.001 | PowerShell | 🚧 |
+| T1087 | Account Discovery | 🚧 |
+| T1082 | System Information Discovery | 🚧 |
+| T1016 | System Network Configuration Discovery | 🚧 |
 
 ---
 
-## KQL
+## 🛡️ Detection Development Standards
 
-Kusto Query Language (KQL) is used for Microsoft security telemetry and threat hunting scenarios.
+Each detection should include:
 
-Example data sources may include:
+- Unique detection name
+- Description
+- Author
+- Date
+- Log source
+- Detection logic
+- Severity
+- MITRE ATT&CK mapping
+- False positives
+- Investigation guidance
+- References
+- Testing information
 
-* Windows process telemetry
-* Security events
-* Sysmon events
-* PowerShell telemetry
-* DNS activity
-* File activity
-
-The KQL detections in this repository are intended to demonstrate how vendor-neutral detection logic can be adapted to Microsoft security telemetry.
-
----
-
-# MITRE ATT&CK
-
-Detections are mapped to relevant **MITRE ATT&CK techniques and sub-techniques**.
-
-Example mapping:
-
-| Detection             | ATT&CK Technique | Purpose                         |
-| --------------------- | ---------------- | ------------------------------- |
-| Suspicious PowerShell | T1059.001        | PowerShell execution            |
-| Process Discovery     | T1057            | Process enumeration             |
-| Registry Run Keys     | T1547.001        | Persistence                     |
-| DNS Discovery         | T1016.001        | Network configuration discovery |
-
-MITRE mappings are used to provide detection context and identify areas of coverage.
+This creates consistent and maintainable detection content.
 
 ---
 
-# CI/CD Pipeline
-
-GitHub Actions is used to automate detection validation.
-
-The pipeline is intended to perform checks such as:
+## 📊 Detection Lifecycle
 
 ```text
-Pull Request
-     │
-     ▼
-YAML Validation
-     │
-     ▼
-Sigma Validation
-     │
-     ▼
-Detection Quality Checks
-     │
-     ▼
-Test Execution
-     │
-     ▼
-PASS / FAIL
-```
-
-A detection change should not be considered complete until it passes the automated validation process.
-
----
-
-# Detection Testing
-
-Detection testing is performed using controlled lab activity and security simulation techniques.
-
-Testing may include:
-
-* Atomic Red Team tests
-* Controlled PowerShell activity
-* Process execution
-* File creation
-* Registry modification
-* DNS activity
-
-Each test documents:
-
-1. Test objective
-2. Simulated behavior
-3. Expected telemetry
-4. Detection logic
-5. Expected result
-6. Actual result
-7. False-positive considerations
-8. Limitations
-
----
-
-# Example Detection Lifecycle
-
-A detection may follow this workflow:
-
-```text
-1. Identify suspicious behavior
-          ↓
-2. Observe endpoint telemetry
-          ↓
-3. Develop Sigma detection
-          ↓
-4. Map to MITRE ATT&CK
-          ↓
-5. Validate Sigma syntax
-          ↓
-6. Convert/adapt to KQL
-          ↓
-7. Execute controlled test
-          ↓
-8. Confirm expected telemetry
-          ↓
-9. Validate detection
-          ↓
-10. Commit to Git
-          ↓
-11. GitHub Actions validation
+        ┌───────────────┐
+        │ Threat Intel  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Detection Dev │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │    Testing    │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │   Validation  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │   Deployment  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │   Monitoring  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Improvement   │
+        └───────┬───────┘
+                │
+                └──────────────→ Detection Development
 ```
 
 ---
 
-# Quality Principles
+## 🛣️ Roadmap
 
-The project follows several detection engineering principles.
+### Phase 1 — Repository Foundation
 
-### 1. Version Control
+- [x] Create GitHub repository
+- [ ] Create repository structure
+- [ ] Add README
+- [ ] Add project documentation
+- [ ] Establish detection naming standards
 
-All detection content is stored in Git.
+### Phase 2 — Sigma Validation
 
-Changes can therefore be:
+- [ ] Add Sigma rules
+- [ ] Install Sigma tooling
+- [ ] Validate Sigma syntax
+- [ ] Implement automated validation
 
-* Reviewed
-* Compared
-* Reverted
-* Audited
-* Tested
+### Phase 3 — KQL Detection Library
 
-### 2. Detection-as-Code
+- [ ] Add KQL detections
+- [ ] Document data sources
+- [ ] Standardize query structure
+- [ ] Add detection metadata
 
-Detection logic is treated as code rather than manually maintained configuration.
+### Phase 4 — Detection Testing
 
-### 3. Automated Validation
+- [ ] Create positive test cases
+- [ ] Create negative test cases
+- [ ] Validate detection behavior
+- [ ] Document test results
 
-Detection rules should be automatically checked before being merged.
+### Phase 5 — CI/CD
 
-### 4. Testability
+- [ ] Create GitHub Actions workflow
+- [ ] Automate Sigma validation
+- [ ] Automate detection testing
+- [ ] Generate validation reports
+- [ ] Implement pull-request checks
 
-Detections should have a documented method for validating their behavior.
+### Phase 6 — MITRE ATT&CK
 
-### 5. Documentation
+- [ ] Map detections to ATT&CK
+- [ ] Track technique coverage
+- [ ] Create ATT&CK coverage documentation
 
-Each detection should explain:
+### Phase 7 — Advanced Automation
 
-* What it detects
-* Why it matters
-* Required telemetry
-* ATT&CK mapping
-* Expected false positives
-* Testing methodology
-* Limitations
-
-### 6. Maintainability
-
-Rules should be structured consistently so that additional detections can be added without redesigning the repository.
-
----
-
-# Current Status
-
-| Component               | Status         |
-| ----------------------- | -------------- |
-| Repository foundation   | 🟡 In Progress |
-| Sigma detections        | 🟡 In Progress |
-| KQL detections          | 🟡 In Progress |
-| MITRE ATT&CK mapping    | 🟡 In Progress |
-| Detection tests         | 🟡 In Progress |
-| GitHub Actions          | 🟡 In Progress |
-| Automated validation    | 🟡 In Progress |
-| Portfolio documentation | 🟡 In Progress |
+- [ ] Detection deployment workflow
+- [ ] Automated conversion
+- [ ] Detection quality checks
+- [ ] Versioned detection releases
 
 ---
 
-# Environment
+## 📚 Related Projects
 
-The project is designed to operate without requiring an active Azure subscription.
+### 🛡️ Windows Attack Telemetry Research Lab
 
-### Development Environment
+Endpoint-focused security research involving:
 
-```text
-Host OS: Ubuntu Linux
-RAM: 32 GB
-Storage: 512 GB SSD
-Virtualization: VirtualBox
-Windows VM: Windows 11 Enterprise
-VM RAM: 12 GB
-```
+- Windows telemetry
+- Sysmon
+- PowerShell
+- KQL
+- Sigma
+- Threat Hunting
+- MITRE ATT&CK
+- Atomic Red Team
 
-Azure and Microsoft Sentinel are **not required for the core pipeline**.
+### ☁️ Cloud Threat Detection Lab
 
-Where applicable, KQL content can be developed and documented independently and later validated against Azure/Microsoft security telemetry when cloud resources become available.
+Cloud-focused Detection Engineering involving:
 
----
-
-# Relationship to Previous Project
-
-This project builds on telemetry and detection engineering work from the Windows Attack Telemetry Research Lab.
-
-Previously developed capabilities include:
-
-* Sysmon telemetry
-* Windows Event Viewer
-* PowerShell telemetry
-* Event ID analysis
-* KQL threat hunting
-* Sigma rules
-* MITRE ATT&CK
-* Atomic Red Team
-* GitHub documentation
-
-The Detection-as-Code pipeline extends that work by introducing **automation, version control, validation, testing, and CI/CD**.
+- Microsoft Azure
+- Microsoft Sentinel
+- Azure Monitor
+- Log Analytics
+- Microsoft Entra ID
+- KQL
+- Cloud Threat Hunting
+- MITRE ATT&CK
 
 ---
 
-# Future Enhancements
+## 💻 Technologies
 
-Potential future improvements include:
+**Detection**
 
-* Automated Sigma-to-KQL conversion
-* Detection unit testing
-* Detection coverage dashboards
-* MITRE ATT&CK coverage visualization
-* Automated rule linting
-* Pull-request detection reviews
-* False-positive tracking
-* Detection performance testing
-* Integration with Microsoft Sentinel
-* Azure DevOps/GitHub deployment workflows
-* Additional telemetry sources
+`Sigma` `KQL` `MITRE ATT&CK`
 
----
+**Automation**
 
-# Learning Outcomes
+`GitHub Actions` `PowerShell`
 
-By completing this project, the portfolio demonstrates practical experience with:
+**Version Control**
 
-* Detection engineering
-* Security telemetry analysis
-* Sigma
-* KQL
-* MITRE ATT&CK
-* Threat hunting
-* Git
-* GitHub
-* GitHub Actions
-* CI/CD
-* Automated security validation
-* Detection testing
-* Blue-team engineering practices
+`Git` `GitHub`
+
+**Security**
+
+`Threat Hunting` `Detection Engineering` `SIEM`
 
 ---
 
-# Disclaimer
+## ⚠️ Disclaimer
 
-This project is intended for **authorized security research, defensive security engineering, and educational purposes**.
+This project is developed for educational and defensive cybersecurity purposes in authorized lab environments.
 
-All testing should be performed against systems and environments that you own or have explicit permission to test.
+All attack simulations and detection testing are performed only against systems and environments where the author has explicit authorization.
 
 ---
 
-## Project Status
+## 👨‍💻 Author
 
-**Project 3 — Detection-as-Code Pipeline**
+**Jose van Schalkwyk**
 
-**Status: 🚧 In Development**
+Aspiring Detection Engineer | Threat Hunter | Purple Team Practitioner
 
-The objective is to create a reproducible, automated, and portfolio-ready detection engineering workflow using open detection standards and Git-based CI/CD.
+---
+
+⭐ **This repository demonstrates the development of security detections using software engineering, automation, testing, and version control principles.**
