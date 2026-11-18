@@ -1,0 +1,12 @@
+title: Invalid Sigma Test Rule
+status: experimental
+description: Temporary invalid rule used to test CI validation.
+author: Detection Engineering Lab
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: suspicious-test-string
+    condition: selection
+level: medium
