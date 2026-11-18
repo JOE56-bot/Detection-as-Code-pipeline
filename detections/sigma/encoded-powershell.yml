@@ -1,0 +1,21 @@
+title: PowerShell Encoded Command
+id: 7f3e2f0c-5d5d-4a3a-9f2b-1c8e5d6a7b90
+status: experimental
+description: Detects PowerShell processes using the EncodedCommand parameter.
+author: Jose
+date: 2026-10-26
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - '-enc'
+            - '-encodedcommand'
+    condition: selection
+falsepositives:
+    - Legitimate administrative or automation scripts using encoded PowerShell commands
+level: medium
+tags:
+    - attack.execution
+    - attack.t1059.001
