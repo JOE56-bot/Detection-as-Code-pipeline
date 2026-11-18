@@ -1,11 +1,10 @@
-- name: Validate Sigma rules
-        run: |
-          sigma check --fail-on-issues detections/sigma/name: Sigma Rule Validation
+name: Sigma Rule Validation
 
 on:
   push:
     branches:
       - main
+      - 'test/**'
     paths:
       - 'detections/sigma/**'
       - '.github/workflows/sigma-validation.yml'
@@ -38,4 +37,4 @@ jobs:
 
       - name: Validate Sigma rules
         run: |
-          sigma check detections/sigma/
+          sigma check --fail-on-issues detections/sigma/
