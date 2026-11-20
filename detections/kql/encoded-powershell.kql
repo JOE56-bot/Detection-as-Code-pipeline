@@ -1,0 +1,15 @@
+// Detect PowerShell processes using encoded command arguments
+DeviceProcessEvents
+| where Timestamp > ago(24h)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine matches regex
+    @"(?i)(^|\s)(-|/)(enc|encodedcommand)(\s|:|$)"
+| project
+    Timestamp,
+    DeviceName,
+    AccountName,
+    FileName,
+    ProcessCommandLine,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine
+| order by Timestamp desc

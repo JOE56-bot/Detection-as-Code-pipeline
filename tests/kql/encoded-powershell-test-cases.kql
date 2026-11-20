@@ -1,0 +1,26 @@
+// Test cases for the encoded PowerShell detection
+datatable(
+    TestCase: string,
+    FileName: string,
+    ProcessCommandLine: string,
+    ExpectedDetection: bool
+)
+[
+    "Short encoded switch", "powershell.exe", "powershell.exe -enc SQBFAFgA", true,
+    "Full encoded switch", "powershell.exe", "powershell.exe -EncodedCommand SQBFAFgA", true,
+    "PowerShell 7 encoded switch", "pwsh.exe", "pwsh.exe -enc SQBFAFgA", true,
+    "Slash encoded switch", "powershell.exe", "powershell.exe /encodedcommand SQBFAFgA", true,
+    "Ordinary PowerShell command", "powershell.exe", "powershell.exe -Command Get-Process", false,
+    "Execution policy argument", "powershell.exe", "powershell.exe -ExecutionPolicy Bypass", false,
+    "Unrelated executable", "cmd.exe", "cmd.exe /c echo encodedcommand", false
+]
+| extend ActualDetection =
+    (FileName in~ ("powershell.exe", "pwsh.exe"))
+    and
+    (ProcessCommandLine matches regex @"(?i)(^|\s)(-|/)(enc|encodedcommand)(\s|:|$)")
+| extend TestResult = iff(
+    ActualDetection == ExpectedDetection,
+    "PASS",
+    "FAIL"
+)
+| project TestCase, ExpectedDetection, ActualDetection, TestResult
